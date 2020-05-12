@@ -1,18 +1,23 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, flash
+from config import Config
+from forms import LoginForm
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
+@app.route("/home")
 @app.route("/")
 def home():
     return render_template("home.html", content="testing")
 
 @app.route("/login", methods = ["POST", "GET"])
 def login():
-    if request.method == "POST":
-        user = request.form["nm"]
-        return redirect(url_for("user", usr=user))
-    else:
-        return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for user {}, remember_me={}'.format(
+            form.username.data, form.remember_me.data))
+        return redirect('/index')
+    return render_template('login.html', title='Sign In', form=form)
 
 @app.route("/<usr>")
 def user(usr):
