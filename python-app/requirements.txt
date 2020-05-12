@@ -1,3 +1,6 @@
 Flask
 mysql-connector
 flask-wtf
+flask-sqlalchemy
+pymysql
+flask_migrate
